@@ -2,22 +2,32 @@
 
 const fs = require("fs");
 const path = require("path");
-const Sequelize = require("sequelize");
-const process = require("process");
+const { Sequelize } = require("sequelize");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
-const config = require(__dirname + "/../config/config.json")[env];
+const config = require(__dirname + "/../config/config.js")[env];
 const db = {};
 
 let sequelize;
-if (process.env.DATABASE_URL) {
-  // Use DATABASE_URL from environment variables
-  sequelize = new Sequelize(process.env.DATABASE_URL, { dialect: "postgres" });
-} else if (config.use_env_variable) {
-  // Use config.json if DATABASE_URL is not set
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+
+try {
+  sequelize = new Sequelize(config.database, config.username, config.password, {
+    host: config.host,
+    dialect: config.dialect,
+    port: config.port,
+    logging: console.log, // Enable logging to debug issues
+  });
+
+  sequelize
+    .authenticate()
+    .then(() => {
+      console.log("Connection has been established successfully.");
+    })
+    .catch((err) => {
+      console.error("Unable to connect to the database:", err);
+    });
+} catch (error) {
+  console.error("Error initializing Sequelize:", error);
 }
 
 fs.readdirSync(__dirname)
@@ -34,6 +44,11 @@ Object.keys(db).forEach((modelName) => {
     db[modelName].associate(db);
   }
 });
+
+// Set up associations, make sure models are defined before setting associations
+if (db.User) db.User.associate(db);
+if (db.Blog) db.Blog.associate(db);
+if (db.BlogImage) db.BlogImage.associate(db);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
