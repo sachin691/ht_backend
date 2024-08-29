@@ -1,13 +1,8 @@
-// controllers/userController.js
-
 const { User } = require("../models");
 
 const createUser = async (req, res) => {
   try {
-    // Extract user details from the request body
     const { firstname, lastname, username, password, email } = req.body;
-
-    // Check if the email or username is already in use
     if (!(await User.isEmailUnique(email))) {
       return res.status(400).json({ message: "Email already in use." });
     }
@@ -16,7 +11,6 @@ const createUser = async (req, res) => {
       return res.status(400).json({ message: "Username already in use" });
     }
 
-    // Create a new user instance
     const newUser = await User.create({
       firstname,
       lastname,
@@ -32,9 +26,11 @@ const createUser = async (req, res) => {
       username: newUser.username,
       email: newUser.email,
     });
+
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+ 
 
 module.exports = { createUser };

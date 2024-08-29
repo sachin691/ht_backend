@@ -4,6 +4,8 @@ const cors = require("cors");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes")
+const adminRoutes = require("./routes/adminRoutes");
+
 
 const port = process.env.PORT;
 const app = express();
@@ -16,6 +18,8 @@ app.use(cors());
 
 
 app.use("/api/users", userRoutes);
+app.use("/api/admin", adminRoutes);
+
 
 app.listen(port, () => {
   console.log("Server Listening on PORT:", port);

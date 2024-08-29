@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       content: {
         type: DataTypes.TEXT,
-        allowNull: false, // Rich text content
+        allowNull: false,
       },
       publishedAt: {
         type: DataTypes.DATE,
@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Blog",
+      timestamps: true,
     }
   );
 
