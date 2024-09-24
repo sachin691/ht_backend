@@ -1,4 +1,4 @@
-require("dotenv").config(); // Ensure to load environment variables
+require("dotenv").config();
 
 module.exports = {
   development: {

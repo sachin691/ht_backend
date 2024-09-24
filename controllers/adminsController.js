@@ -35,4 +35,21 @@ const createLanguage = async (req, res) => {
   }
 };
 
-module.exports = { createLanguage };
+const getLanguage = async (req, res) => {
+  try {
+    const { name } = req.params;
+
+    const language = await Language.findOne({ where: { name } });
+
+    if (!language) {
+      return res.status(404).json({ error: "Language not found" });
+    }
+    return res.status(200).json(language);
+  } catch (error) {
+    console.error("Error fetching language:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+
+module.exports = { createLanguage, getLanguage };
